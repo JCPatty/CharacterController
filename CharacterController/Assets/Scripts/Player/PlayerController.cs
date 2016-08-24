@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		print("Testing this out for GIT");
 	}
 
 	// Update is called once per frame

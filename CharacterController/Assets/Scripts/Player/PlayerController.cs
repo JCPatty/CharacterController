@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
 		 */
 
 		// TODO: Need to alter the move speed based on diagonal travel. The combination of forward and sideways movement multiplies to allow faster
-		// TODO: movement. Classic cheating technique.
+		// TODO: movement. Classic cheating technique. Apparently nothing to change?
 		if (Input.GetKey("w") || Input.GetKey(KeyCode.UpArrow))
 			transform.Translate(Vector3.forward * Time.deltaTime * _movespeed);
 		if (Input.GetKey("d") || Input.GetKey(KeyCode.RightArrow))

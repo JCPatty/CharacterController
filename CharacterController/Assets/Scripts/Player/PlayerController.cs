@@ -56,8 +56,6 @@ public class PlayerController : MonoBehaviour
 		transform.Rotate(lookhereX);
 		playerCamera.transform.Rotate(lookhereY);
 
-		// Testing the input detection
-		this.getInput();
 	}
 
 	// Seriously, fuck scoping. 360 no scope this shit
@@ -70,5 +68,11 @@ public class PlayerController : MonoBehaviour
 		}
 
 		return return_string;
+	}
+
+	// JamesChange 260816: Need to create a global function to determine the information of the item colliding with.
+	//		       What follows will be the behavioural handler based on information retrieved of the object that it has collided with.
+	void OnCollissionEnter(Collision col) {
+		print("Elvis has left the building");
 	}
 }

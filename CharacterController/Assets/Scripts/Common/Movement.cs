@@ -43,7 +43,7 @@ public class Movement {
 	}
 
 	// JamesChange 270816: Heavily dependant on the fact of having a jumping state
-	public static void Jump(GameObject obj, float jumpforce, float status) {
+	public static void Jump(GameObject obj, float jumpforce) {
 		obj.GetComponent<Rigidbody>().velocity = new Vector3(0,5,0);
 		/*if (status > 0) {
 			obj.GetComponent<Rigidbody>().AddForce(new Vector3(0,jumpforce,0),ForceMode.Impulse);

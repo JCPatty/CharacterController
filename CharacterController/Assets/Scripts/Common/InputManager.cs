@@ -13,10 +13,6 @@ public class InputManager : MonoBehaviour {
 	// TODO: Need to alter the move speed based on diagonal travel. The combination of forward and sideways movement multiplies to allow faster
 	// TODO: movement. Classic cheating technique. Apparently nothing to change?
 	public static void EnablePlayerControl(GameObject obj, Dictionary<string,float> properties) {
-		/* 
-		* Bread and butter of movement within the game, constant if statements allow for multi directional pathing.
-		* By avoiding the use of a switch statement, we can eliminate the possibility of static mobility
-		*/
 		float movespeed;
 		if (properties.TryGetValue(PropertyManager.CHARACTER_MOVESPEED,out movespeed)) {
 			if (Input.GetKey("w") || Input.GetKey(KeyCode.UpArrow))
@@ -31,12 +27,19 @@ public class InputManager : MonoBehaviour {
 
 		if (Input.GetKey("space")) {
 			float jumpforce = 1.0f;
-			float jumpstatus = 1.0f;
+			float distance = 0.0f;
+
+			// As it stands, this method is not reliable. Change in future
+			RaycastHit hit;
+			if (Physics.Raycast(obj.transform.position,-Vector3.up,out hit))
+				distance = hit.distance;
+
+			Debug.Log(distance);
 			if (
 				properties.TryGetValue(PropertyManager.CHARACTER_JUMP_FORCE,out jumpforce) &&
-				properties.TryGetValue(PropertyManager.CHARACTER_JUMP_STATUS,out jumpstatus)
+				distance <= 1.1f
 			)
-				Movement.Jump(obj,jumpforce,jumpstatus);
+				Movement.Jump(obj,jumpforce);
 		}
 	}
 }

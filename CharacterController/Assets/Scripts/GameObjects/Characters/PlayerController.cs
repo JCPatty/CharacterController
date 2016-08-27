@@ -16,9 +16,6 @@ public class PlayerController : MonoBehaviour
 	private float _jumpforce = 2.5f;
 	private float _lookspeed = 3.5f;
 
-	// This is a dangerous variable. A float being used as a bool, not too great, but don't know enough about mixed key values.
-	private float _jumpstatus = 1.0f;
-
 	// Gameplay Character properties
 	private int _maxhealth = 100;
 	private int _maxenergy = 100;
@@ -37,7 +34,6 @@ public class PlayerController : MonoBehaviour
 		// Sort all potential float values for other classes
 		_parseValues.Add(PropertyManager.CHARACTER_JUMP_FORCE,_jumpforce);
 		_parseValues.Add(PropertyManager.CHARACTER_MOVESPEED,_movespeed);
-		_parseValues.Add(PropertyManager.CHARACTER_JUMP_STATUS,_jumpstatus);
 	}
 
 	// Update is called once per frame
@@ -56,10 +52,6 @@ public class PlayerController : MonoBehaviour
 		transform.Rotate(lookhereX);
 		playerCamera.transform.Rotate(lookhereY);
 
-	}
-
-	public void UpdateJumpStatus(float status) {
-		_jumpstatus = status;
 	}
 
 	// JamesChange 260816: This function needs to be moved to the Techniques class as it will be the prime controller source

@@ -3,3 +3,6 @@
 ################################################################################
 
 /CharacterController/Temp/UnityLockfile
+
+#Ignore Files Below
+*.png

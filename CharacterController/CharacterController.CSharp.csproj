@@ -62,8 +62,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Environment\Limitations.cs" />
-    <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Common\Colliders.cs" />
+    <Compile Include="Assets\Scripts\Common\InputManager.cs" />
+    <Compile Include="Assets\Scripts\Common\Limitations.cs" />
+    <Compile Include="Assets\Scripts\Common\Movement.cs" />
+    <Compile Include="Assets\Scripts\Debugging\Tools.cs" />
+    <Compile Include="Assets\Scripts\GameObjects\Characters\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\GameObjects\Characters\PropertyManager.cs" />
+    <Compile Include="Assets\Scripts\GameObjects\Environment\TagManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

@@ -10,5 +10,7 @@ public class TagManager {
 	// Related to level boundries
 	public const string ENVIRONMENT_LIMITER_BORDER = "LimiterBorder";
 
+	// Hidden objects to retain data
+	public const string ENVIRONMENT_BUILDING = "Building";
 
 }

@@ -7,6 +7,10 @@ public class TagManager {
 	public const string CHARACTER_PLAYER = "Player";
 	public const string CHARACTER_ENEMY = "Enemy";
 
+	// Camera related tags
+	public const string CAMERA_FIRST_PERSON = "FirstPersonCamera";
+	public const string CAMERA_THIRD_PERSON = "ThirdPersonCamera";
+
 	// Related to level boundries
 	public const string ENVIRONMENT_LIMITER_BORDER = "LimiterBorder";
 

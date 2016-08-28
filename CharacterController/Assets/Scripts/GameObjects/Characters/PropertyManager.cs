@@ -17,6 +17,7 @@ public class PropertyManager {
 	public const string CHARACTER_GRAVITY = "gravity";
 	public const string CHARACTER_JUMP_FORCE = "jump_force";
 	public const string CHARACTER_JUMP_STATUS = "jump_status";
+	public const string CHARACTER_CAMERA_MODE = "camera_mode";
 
 	// Calculation constants
 	public const string CALCULATION_ADD = "add";

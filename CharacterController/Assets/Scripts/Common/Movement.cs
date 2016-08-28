@@ -44,10 +44,11 @@ public class Movement {
 
 	// JamesChange 270816: Heavily dependant on the fact of having a jumping state
 	public static void Jump(GameObject obj, float jumpforce) {
-		obj.GetComponent<Rigidbody>().velocity = new Vector3(0,5,0);
-		/*if (status > 0) {
-			obj.GetComponent<Rigidbody>().AddForce(new Vector3(0,jumpforce,0),ForceMode.Impulse);
-			obj.SendMessage("UpdateJumpStatus",0.0f);
-		}*/
+		// 
+		float speed_x = (obj.transform.position.x - obj.GetComponent<PlayerController>().GetLastKnownPos().x);
+		float speed_z = (obj.transform.position.z - obj.GetComponent<PlayerController>().GetLastKnownPos().z);
+
+		// Determine velocity of jumping object. At this point, the movement cannot be cancelled, the velocity has been retrieved.
+		obj.GetComponent<Rigidbody>().velocity = new Vector3(0,jumpforce,0);
 	}
 }

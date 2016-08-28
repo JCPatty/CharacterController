@@ -40,5 +40,13 @@ public class InputManager : MonoBehaviour {
 			)
 				Movement.Jump(obj,jumpforce);
 		}
+
+		// Alter camera style
+		if (Input.GetKeyDown(KeyCode.Tab)) {
+			float cameramode = 1.0f;
+			if (properties.TryGetValue(PropertyManager.CHARACTER_CAMERA_MODE, out cameramode)) {
+
+			}
+		}
 	}
 }

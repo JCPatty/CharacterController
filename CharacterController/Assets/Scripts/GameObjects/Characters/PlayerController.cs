@@ -6,30 +6,41 @@ public class PlayerController : MonoBehaviour
 {
 
 	// Set public variables
-	public Camera playerCamera;
+	public Camera playerFPCamera;	// First Person Camera
+	public Camera playerTPCamera;   // Third Person Camera
 	public GameObject player;
-	public bool invertedY;
 
-	// Set player controller properties :: Keep it fixed for now
-	private float _movespeed = 2.5f;
-	private float _gravity = 9.8f;
-	private float _jumpforce = 2.5f;
-	private float _lookspeed = 3.5f;
+	// Camera related stuff
+	public bool invertedY;
 
 	// Gameplay Character properties
 	private int _maxhealth = 100;
 	private int _maxenergy = 100;
-	private Dictionary<string,float> _parseValues = new Dictionary<string,float>();
 
 	// Original Transform and Quaternion Origin
 	private Quaternion _originalRotation;
 	private Vector3 _startingPos;
+
+	// Player position. Used to calculate jumping velocity without use of rigidbody physics
+	private Vector3 lastKnownPos;
+
+	/* Variables below this declaration get passed into different functions, more as a global information parser */
+	private Dictionary<string,float> _parseValues = new Dictionary<string,float>();
+
+	// Set player controller properties :: Keep it fixed for now
+	private float _movespeed = 2.5f;
+	private float _jumpforce = 5.0f;
+	private float _gravity = 9.8f;
+	private float _lookspeed = 3.5f;
+
+	/* Passed variables ends here */
 
 	// Use this for initialization
 	void Start()
 	{
 		_originalRotation = transform.rotation;
 		_startingPos = transform.position;
+		lastKnownPos = transform.position;
 
 		// Sort all potential float values for other classes
 		_parseValues.Add(PropertyManager.CHARACTER_JUMP_FORCE,_jumpforce);
@@ -40,18 +51,57 @@ public class PlayerController : MonoBehaviour
 	void Update()
 	{
 		InputManager.EnablePlayerControl(gameObject,_parseValues);
+		Camera playerCamera = PlayerController.GetActiveCamera(gameObject);
+		
+		if (Input.GetKeyDown(KeyCode.LeftAlt)) {
+			if (playerFPCamera.enabled) {
+				playerFPCamera.enabled = false;
+				playerTPCamera.enabled = true;
+			} else {
+				playerFPCamera.enabled = true;
+				playerTPCamera.enabled = false;
+			}
+		}
+
+		this.SetLastKnownPos(transform.position);
 
 		/*
 		 Assisted thread http://answers.unity3d.com/questions/363943/mouse-lookrotate.html
 		 Essentially sticks to the use of mouse float values and geometric countering for inverted operation.
 		 */
 		float mouseInputX = Input.GetAxis("Mouse X") * _lookspeed;
-		float mouseInputY = (invertedY ? -Input.GetAxis("Mouse Y") : Input.GetAxis("Mouse Y")) * _lookspeed;
 		Vector3 lookhereX = new Vector3(0, mouseInputX, 0);
-		Vector3 lookhereY = new Vector3(mouseInputY, 0, 0);
 		transform.Rotate(lookhereX);
-		playerCamera.transform.Rotate(lookhereY);
 
+		if (playerCamera.CompareTag(TagManager.CAMERA_FIRST_PERSON)) {
+			float mouseInputY = (invertedY ? -Input.GetAxis("Mouse Y") : Input.GetAxis("Mouse Y")) * _lookspeed;
+			Vector3 lookhereY = new Vector3(mouseInputY, 0, 0);
+			playerCamera.transform.Rotate(lookhereY);
+		}
+	}
+
+	// Need it to be static, other functions have to rely on this to determine from the game object
+	public static Camera GetActiveCamera(GameObject obj) {
+		if (obj.GetComponent<PlayerController>().playerFPCamera.enabled)
+			return obj.GetComponent<PlayerController>().playerFPCamera;
+		else
+			return obj.GetComponent<PlayerController>().playerTPCamera;
+	}
+
+	public static bool CameraFirstPerson(float cameravalue) {
+		if (cameravalue == 0.0f)
+			return false;
+		else
+			return true;
+	}
+
+	// This can only be used with the definition of a player gameobject, no point making it static
+	public Vector3 GetLastKnownPos() {
+		return lastKnownPos;
+	}
+
+	public void SetLastKnownPos(Vector3 new_pos) {
+		lastKnownPos = new_pos;
 	}
 
 	// JamesChange 260816: This function needs to be moved to the Techniques class as it will be the prime controller source

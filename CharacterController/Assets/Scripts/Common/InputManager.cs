@@ -34,7 +34,6 @@ public class InputManager : MonoBehaviour {
 			if (Physics.Raycast(obj.transform.position,-Vector3.up,out hit))
 				distance = hit.distance;
 
-			Debug.Log(distance);
 			if (
 				properties.TryGetValue(PropertyManager.CHARACTER_JUMP_FORCE,out jumpforce) &&
 				distance <= 1.1f

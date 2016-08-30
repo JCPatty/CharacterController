@@ -11,9 +11,11 @@ public class InputManager : MonoBehaviour {
 	 */
 
 	// TODO: Need to alter the move speed based on diagonal travel. The combination of forward and sideways movement multiplies to allow faster
+	// TODO: Also need to disable movement while in jumping animation, either I will get back to this, or maybe someday I'll be able to get someone else to do it.
 	// TODO: movement. Classic cheating technique. Apparently nothing to change?
-	public static void EnablePlayerControl(GameObject obj, Dictionary<string,float> properties) {
+	public static void EnablePlayerFPControl(GameObject obj, Dictionary<string,float> properties) {
 		float movespeed;
+
 		if (properties.TryGetValue(PropertyManager.CHARACTER_MOVESPEED,out movespeed)) {
 			if (Input.GetKey("w") || Input.GetKey(KeyCode.UpArrow))
 				Movement.Move(obj,movespeed,Movement.MOVEMENT_FORWARD);
@@ -29,24 +31,29 @@ public class InputManager : MonoBehaviour {
 			float jumpforce = 1.0f;
 			float distance = 0.0f;
 
-			// As it stands, this method is not reliable. Change in future
 			RaycastHit hit;
 			if (Physics.Raycast(obj.transform.position,-Vector3.up,out hit))
 				distance = hit.distance;
 
 			if (
 				properties.TryGetValue(PropertyManager.CHARACTER_JUMP_FORCE,out jumpforce) &&
-				distance <= 1.1f
+				distance < 1.1f
 			)
 				Movement.Jump(obj,jumpforce);
 		}
+	}
 
-		// Alter camera style
-		if (Input.GetKeyDown(KeyCode.Tab)) {
-			float cameramode = 1.0f;
-			if (properties.TryGetValue(PropertyManager.CHARACTER_CAMERA_MODE, out cameramode)) {
-
-			}
+	public static void EnablePlayerTPControl(GameObject obj,Dictionary<string,float> properties) {
+		float movespeed;
+		if (properties.TryGetValue(PropertyManager.CHARACTER_MOVESPEED,out movespeed)) {
+			if (Input.GetKey("w") || Input.GetKey(KeyCode.UpArrow))
+				Movement.Move(obj,movespeed,Movement.MOVEMENT_FORWARD);
+			if (Input.GetKey("d") || Input.GetKey(KeyCode.RightArrow))
+				Movement.Turn(obj,movespeed,Movement.MOVEMENT_TURN_RIGHT);
+			if (Input.GetKey("a") || Input.GetKey(KeyCode.LeftArrow))
+				Movement.Turn(obj,movespeed,Movement.MOVEMENT_TURN_LEFT);
+			if (Input.GetKey("s") || Input.GetKey(KeyCode.DownArrow))
+				Movement.Move(obj,movespeed,Movement.MOVEMENT_BACKWARDS);
 		}
 	}
 }

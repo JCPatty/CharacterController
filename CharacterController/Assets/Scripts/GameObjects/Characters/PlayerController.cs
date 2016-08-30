@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
 
 	// Player position. Used to calculate jumping velocity without use of rigidbody physics
 	private Vector3 lastKnownPos;
+	private float _jumpstatus = 0.0f;
 
 	/* Variables below this declaration get passed into different functions, more as a global information parser */
 	private Dictionary<string,float> _parseValues = new Dictionary<string,float>();
@@ -35,9 +36,14 @@ public class PlayerController : MonoBehaviour
 
 	/* Passed variables ends here */
 
+	// Third person controller variables
+	private Vector3 offset;
+
 	// Use this for initialization
 	void Start()
 	{
+		offset = new Vector3(transform.position.x,transform.position.y,transform.position.z + 3.0f); 
+
 		_originalRotation = transform.rotation;
 		_startingPos = transform.position;
 		lastKnownPos = transform.position;
@@ -45,14 +51,13 @@ public class PlayerController : MonoBehaviour
 		// Sort all potential float values for other classes
 		_parseValues.Add(PropertyManager.CHARACTER_JUMP_FORCE,_jumpforce);
 		_parseValues.Add(PropertyManager.CHARACTER_MOVESPEED,_movespeed);
+		_parseValues.Add(PropertyManager.CHARACTER_JUMP_STATUS,_jumpstatus);
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		InputManager.EnablePlayerControl(gameObject,_parseValues);
 		Camera playerCamera = PlayerController.GetActiveCamera(gameObject);
-		
 		if (Input.GetKeyDown(KeyCode.LeftAlt)) {
 			if (playerFPCamera.enabled) {
 				playerFPCamera.enabled = false;
@@ -69,14 +74,30 @@ public class PlayerController : MonoBehaviour
 		 Assisted thread http://answers.unity3d.com/questions/363943/mouse-lookrotate.html
 		 Essentially sticks to the use of mouse float values and geometric countering for inverted operation.
 		 */
-		float mouseInputX = Input.GetAxis("Mouse X") * _lookspeed;
-		Vector3 lookhereX = new Vector3(0, mouseInputX, 0);
-		transform.Rotate(lookhereX);
 
 		if (playerCamera.CompareTag(TagManager.CAMERA_FIRST_PERSON)) {
+			// First Person Handler, just like any shooter would be like
+			InputManager.EnablePlayerFPControl(gameObject,_parseValues);
+
+			float mouseInputX = Input.GetAxis("Mouse X") * _lookspeed;
+			Vector3 lookhereX = new Vector3(0, mouseInputX, 0);
+			transform.Rotate(lookhereX);
+
+
 			float mouseInputY = (invertedY ? -Input.GetAxis("Mouse Y") : Input.GetAxis("Mouse Y")) * _lookspeed;
 			Vector3 lookhereY = new Vector3(mouseInputY, 0, 0);
 			playerCamera.transform.Rotate(lookhereY);
+		} else if (Input.GetMouseButton(1)) {
+			// Third Person Handler as well, this effects the characters orientation and direction of travel
+		} else {
+			// Third Person Handler, runs like any mmo, left click hold will allow camera angle change only
+			if (Input.GetMouseButton(0)) {
+				offset = Quaternion.AngleAxis(Input.GetAxis("Mouse X") * _lookspeed,Vector3.up) * offset;
+				offset = Quaternion.AngleAxis(Input.GetAxis("Mouse Y") * _lookspeed,Vector3.right) * offset;
+			}
+			playerCamera.transform.position = transform.position + offset;
+			playerCamera.transform.LookAt(transform.position);
+			InputManager.EnablePlayerTPControl(gameObject,_parseValues);
 		}
 	}
 
@@ -102,6 +123,13 @@ public class PlayerController : MonoBehaviour
 
 	public void SetLastKnownPos(Vector3 new_pos) {
 		lastKnownPos = new_pos;
+	}
+
+	public void SetJumpStatus(bool status) {
+		if (status)
+			_jumpstatus = 1.0f;
+		else
+			_jumpstatus = 0.0f;
 	}
 
 	// JamesChange 260816: This function needs to be moved to the Techniques class as it will be the prime controller source
